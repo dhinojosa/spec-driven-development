@@ -48,3 +48,27 @@ The user may ask to implement:
 
 When the work is complete, update the task file checkboxes and report the
 validation performed.
+
+## Validation Rule
+
+For every implementation change, run the full available Maven verification suite
+unless the user explicitly asks for a narrower check or the suite is blocked by
+environment constraints.
+
+Default command:
+
+```bash
+mvn verify
+```
+
+Documentation-only or POM-only changes may use narrower validation such as:
+
+```bash
+mvn validate
+```
+
+If `mvn verify` cannot run, report why, run the strongest available narrower
+validation, and document the validation gap in the task file.
+
+Do not mark implementation tasks complete unless implementation and validation
+are complete, or the remaining validation gap is explicitly recorded.

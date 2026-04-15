@@ -28,6 +28,16 @@ sdk use maven 4.0.0-rc-5
 mvn validate
 ```
 
+For implementation changes, run the full available Maven verification suite:
+
+```bash
+mvn verify
+```
+
+If full verification is blocked by environment constraints, report the blocker,
+run the strongest narrower validation available, and document the validation gap
+in the relevant task file.
+
 ## Repository Shape
 
 - `full-application`: application implementation
