@@ -45,7 +45,7 @@ supporting services such as Postgres.
 Use ports and adapters where it helps keep the application core independent from
 infrastructure concerns.
 
-Keep dependency direction clear:
+Keep the dependency direction clear:
 
 - domain code should not depend on application services, controllers, or
   infrastructure
