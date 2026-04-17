@@ -26,8 +26,30 @@ Each task file should include:
 - governed spec identifier
 - feature file path
 - business behavior summary
-- implementation plan as markdown checkboxes
+- implementation plan as markdown checkboxes grouped by category
 - validation checklist
+
+## Required Task Categories
+
+Present implementation tasks by category in this order:
+
+- Domain Aggregate
+- Domain Service
+- Application Service
+- Repository
+- Domain Event
+- Controller
+- E2E Testing
+
+Each category must include the required implementation tasks and the necessary
+tests that will be created for that category.
+
+For each planned test, describe how it will be created. Include the intended
+test type, module, target behavior, and supporting tools such as Cucumber,
+Testcontainers, jqwik, or controller test utilities.
+
+If a category does not apply to a feature, keep the category visible and explain
+why it is unnecessary for that feature.
 
 ## Checkbox Rules
 
