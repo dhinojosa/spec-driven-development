@@ -49,12 +49,12 @@ In each feature, the following structure is followed:
 ### Port In
 
 - Port In is located in `port/in` folder
-- Port In has a <role><aggregate><Command|Query>Port name.
+- Port In has a `<Role><Aggregate><Command|Query>Port` name.
 
 #### Command Ports
 
 - Use the Command Pattern
-- Command Ports have the name `<role><aggregate>CommandPort`, for example:
+- Command Ports have the name `<Role><Aggregate>CommandPort`, for example:
 
 ```java
 public interface ClientCustomerCommandPort {
@@ -90,11 +90,11 @@ public sealed interface CustomerResult permits CustomerResult.CustomerCreated, C
 ### Query Ports
 
 - Query Ports are defined in `port/in`
-- They are named as `<role><aggregate>QueryPort`
+- They are named as `<Role><Aggregate>QueryPort`
 - They use rich methods like `findById`, `findAllLikeFirstName(...)`, etc.
 
 ```java
-public interface ForClientCustomerQueryPort {
+public interface ClientCustomerQueryPort {
     CustomerQueryResult findById(CustomerId id);
 }
 ```
@@ -294,13 +294,13 @@ public class OrderDomainService {
 
 #### Example
 
-- `CustomerCommandApplicationService` is an application service that implements `ForClientCustomerCommandPort`.
+- `CustomerCommandApplicationService` is an application service that implements `ClientCustomerCommandPort`.
 - It is responsible for executing a `CustomerCommand` and returning a `CustomerResult`.
 - It is injected with a `CustomerRepository` and a `Transactional` implementation. `Transactional` is a project definition that handles a transaction around a block of code. It is not a part of architecture, but how perform transactions using `ScopedValue`
 - It is named `CustomerCommandApplicationService`.
 
 ```java
-public class CustomerCommandApplicationService implements ForClientCustomerCommandPort {
+public class CustomerCommandApplicationService implements ClientCustomerCommandPort {
     private final CustomerRepository customerRepository;
     private final Transactional transactional;
 
@@ -343,6 +343,51 @@ public class CustomerCommandApplicationService implements ForClientCustomerComma
 - They are tested using test containers and/or test containers with JQwik
 - They are injected into services which are themselves implementation of `port/in` interfaces
 
+## Property-Based And Integration Testing
+
+Use jqwik at varying levels of the application where generated inputs can prove
+behavior across meaningful cases.
+
+Use Testcontainers for tests that require real infrastructure, especially
+repository and persistence behavior.
+
+### Repository Properties
+
+For repositories, every generated record that is created and saved must be
+findable by id.
+
+Repository property tests should combine jqwik-generated records with
+Testcontainers-backed infrastructure when persistence is involved.
+
+### Service Properties
+
+For application services, every command accepted by a command port must produce
+state that can be observed through the corresponding query port.
+
+Service property tests should generate command inputs, execute the command port,
+and verify the result through the query port rather than by inspecting
+implementation details.
+
+### Controller Properties
+
+For controllers, every successful `POST` that creates a resource must be
+observable through a corresponding `GET`.
+
+Controller property tests should generate request payloads, call the controller
+through the same HTTP-facing boundary used by integration tests, and verify the
+created resource through `GET`.
+
+### Arbitraries And Generators
+
+If jqwik `Gen` or `Arbitrary` helpers are needed, place them in an `arbitrary`
+package under the corresponding test package.
+
+Example:
+
+```text
+src/test/java/com/xyzcorp/feature/account/arbitrary/AccountArbitrary.java
+```
+
 ## Application Layers
 
 Feature tasks should be considered:
@@ -364,9 +409,78 @@ Feature tasks should be considered:
 
 End-to-end tests should run through `full-application-e2e`.
 
-When needed, `full-application` should produce an application image using Jib.
+The `full-application` module must produce an application container image using
+the Jib Maven plugin during the Maven `package` phase.
+
+The Jib image is used by `full-application-e2e` as the application under test.
 The e2e module should use Docker Compose to run the application image and
 supporting services such as Postgres.
+
+### Jib Container Image
+
+Configure Jib in `full-application`.
+
+Use:
+
+- plugin: `com.google.cloud.tools:jib-maven-plugin`
+- version: `3.4.6`
+- execution phase: `package`
+- goal: `build`
+- base image: an OpenJDK slim Bookworm image matching the application's Java
+  version, such as `openjdk:26-slim-bookworm` for Java 26 or
+  `openjdk:25-ea-slim-bookworm` for Java 25
+- target image: `dhinojosa/full-application:${project.version}`
+- main class: `com.evolutionnext.Runner`
+- JVM flag: `--enable-preview`
+- exposed port: `8080` when the application exposes an HTTP server
+- platforms:
+  - `linux/amd64`
+  - `linux/arm64`
+
+Use this configuration shape:
+
+```xml
+<plugin>
+    <groupId>com.google.cloud.tools</groupId>
+    <artifactId>jib-maven-plugin</artifactId>
+    <version>3.4.6</version>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>build</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <from>
+            <image><!-- Use an OpenJDK slim Bookworm image matching the application Java version. --></image>
+            <platforms>
+                <platform>
+                    <architecture>amd64</architecture>
+                    <os>linux</os>
+                </platform>
+                <platform>
+                    <architecture>arm64</architecture>
+                    <os>linux</os>
+                </platform>
+            </platforms>
+        </from>
+        <to>
+            <image>dhinojosa/full-application:${project.version}</image>
+        </to>
+        <container>
+            <mainClass>com.evolutionnext.Runner</mainClass>
+            <jvmFlags>
+                <jvmFlag>--enable-preview</jvmFlag>
+            </jvmFlags>
+            <ports>
+                <port>8080</port>
+            </ports>
+        </container>
+    </configuration>
+</plugin>
+```
 
 ## Architectural Style
 

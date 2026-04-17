@@ -48,6 +48,14 @@ For each planned test, describe how it will be created. Include the intended
 test type, module, target behavior, and supporting tools such as Cucumber,
 Testcontainers, jqwik, or controller test utilities.
 
+Task plans must include the jqwik and Testcontainers properties defined in
+`.memory-bank/architecture.md` when the feature includes repositories,
+application services, or controllers.
+
+The E2E Testing category must include Jib image creation for `full-application`
+and Docker Compose wiring in `full-application-e2e` when a feature requires
+end-to-end verification.
+
 If a category does not apply to a feature, keep the category visible and explain
 why it is unnecessary for that feature.
 
@@ -57,6 +65,21 @@ why it is unnecessary for that feature.
 - Mark completed work immediately after it is done: `- [x]`
 - Do not mark a task complete before implementation and validation are complete.
 - If a task becomes unnecessary, keep it visible and explain why.
+
+## Task Wording
+
+Tasks must be direct, concrete action items.
+
+Use imperative verbs such as `Create`, `Add`, `Implement`, `Wire`, `Test`,
+`Configure`, `Validate`, or `Document`.
+
+Do not create discussion tasks such as `Discuss`, `Consider`, `Decide whether`,
+`Figure out`, or `Let's discuss`.
+
+If a decision is required before implementation, write the task as the action
+needed to resolve it, such as `Choose the repository persistence strategy and
+record the decision`, then complete the decision before implementation work
+continues.
 
 ## Plan Before Work
 
