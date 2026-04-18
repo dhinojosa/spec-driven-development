@@ -81,13 +81,13 @@ public final class AccountHttpHandler implements HttpHandler {
         }
         var userName = query.substring("userName=".length());
         var result = queryPort.findByUserName(userName);
-        if (result instanceof AccountQueryResult.AccountFound found) {
-            HttpResponses.text(exchange, 200, found.accountId().value() + " " + found.userName());
+        if (result instanceof AccountQueryResult.AccountFound(AccountId accountId, String name)) {
+            HttpResponses.text(exchange, 200, accountId.value() + " " + name);
         } else {
             try {
                 var byId = queryPort.findById(new AccountId(UUID.fromString(userName)));
-                if (byId instanceof AccountQueryResult.AccountFound found) {
-                    HttpResponses.text(exchange, 200, found.accountId().value() + " " + found.userName());
+                if (byId instanceof AccountQueryResult.AccountFound(AccountId accountId, String name)) {
+                    HttpResponses.text(exchange, 200, accountId.value() + " " + name);
                     return;
                 }
             } catch (IllegalArgumentException ignored) {
