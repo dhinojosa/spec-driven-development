@@ -18,6 +18,20 @@ Example:
 
 The identifier must match a Cucumber tag such as `@ACC-0001`.
 
+## Task Identifiers
+
+Use `ACC-####` for business-facing acceptance tasks governed by Cucumber specs.
+
+Use `TECH-####` for technical tasks that are not directly tied to business
+behavior.
+
+`ACC-####` tasks must reference a matching Cucumber tag, such as `@ACC-0001`.
+
+`TECH-####` tasks must state why no Cucumber spec applies.
+
+Technical tasks must still use direct action items, include validation, and
+update checkboxes as work is completed.
+
 ## Required Sections
 
 Each task file should include:

@@ -53,6 +53,16 @@ Example:
 
 The task file contains the implementation plan as markdown checkboxes.
 
+## Business Versus Technical Tasks
+
+Business behavior must be driven by Cucumber specs and `ACC-####` identifiers.
+
+Technical work may use `TECH-####` identifiers when no business behavior is
+being specified.
+
+Technical tasks must not introduce business behavior unless a Cucumber spec is
+added.
+
 ## Workflow
 
 1. Start from the Cucumber spec.
