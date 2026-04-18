@@ -10,26 +10,32 @@ import net.jqwik.api.Property;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class AccountApplicationServiceTest {
+class AnonymousAccountApplicationServiceTest {
     @Property
     void registeredAccountCanBeFoundThroughQueryPort(@ForAll("userNames") String userName,
                                                      @ForAll("passwords") String password) {
-        var service = new AccountApplicationService(new InMemoryAccountRepository());
-        var result = service.execute(new AccountCommand.RegisterAccount(AccountId.newId(), userName, password));
+        var repository = new InMemoryAccountRepository();
+        var commandService = new AnonymousAccountCommandApplicationService(repository);
+        var queryService = new AnonymousAccountQueryApplicationService(repository);
+
+        var result = commandService.execute(new AccountCommand.RegisterAccount(AccountId.newId(), userName, password));
 
         assertThat(result).isInstanceOf(AccountResult.AccountRegistered.class);
-        assertThat(service.findByUserName(userName)).isInstanceOf(AccountQueryResult.AccountFound.class);
+        assertThat(queryService.findByUserName(userName)).isInstanceOf(AccountQueryResult.AccountFound.class);
     }
 
     @Property
     void loginCommandIsObservableThroughResultAndQueryPort(@ForAll("userNames") String userName,
                                                            @ForAll("passwords") String password) {
-        var service = new AccountApplicationService(new InMemoryAccountRepository());
-        service.execute(new AccountCommand.RegisterAccount(AccountId.newId(), userName, password));
+        var repository = new InMemoryAccountRepository();
+        var commandService = new AnonymousAccountCommandApplicationService(repository);
+        var queryService = new AnonymousAccountQueryApplicationService(repository);
 
-        assertThat(service.execute(new AccountCommand.LogIn(userName, password)))
+        commandService.execute(new AccountCommand.RegisterAccount(AccountId.newId(), userName, password));
+
+        assertThat(commandService.execute(new AccountCommand.LogIn(userName, password)))
             .isInstanceOf(AccountResult.LogInSucceeded.class);
-        assertThat(service.findByUserName(userName)).isInstanceOf(AccountQueryResult.AccountFound.class);
+        assertThat(queryService.findByUserName(userName)).isInstanceOf(AccountQueryResult.AccountFound.class);
     }
 
     @net.jqwik.api.Provide

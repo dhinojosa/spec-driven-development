@@ -1,6 +1,7 @@
 package com.evolutionnext;
 
-import com.evolutionnext.features.account.application.service.AccountApplicationService;
+import com.evolutionnext.features.account.application.service.AnonymousAccountCommandApplicationService;
+import com.evolutionnext.features.account.application.service.AnonymousAccountQueryApplicationService;
 import com.evolutionnext.features.account.infrastructure.adapter.in.AccountHttpHandler;
 import com.evolutionnext.features.account.port.out.AccountRepository;
 import com.evolutionnext.http.HealthHandler;
@@ -15,11 +16,12 @@ public final class AccountApplication {
     public HttpServer start(int port, AccountRepository accountRepository) {
         try {
             var server = HttpServer.create(new InetSocketAddress(port), 0);
-            var accountService = new AccountApplicationService(accountRepository);
+            var commandService = new AnonymousAccountCommandApplicationService(accountRepository);
+            var queryService = new AnonymousAccountQueryApplicationService(accountRepository);
             var resourceLoader = new ResourceLoader();
             server.createContext("/health", new HealthHandler());
             server.createContext("/assets", new StaticAssetHandler(resourceLoader));
-            server.createContext("/account", new AccountHttpHandler(accountService, accountService, resourceLoader));
+            server.createContext("/account", new AccountHttpHandler(commandService, queryService, resourceLoader));
             server.start();
             return server;
         } catch (IOException exception) {

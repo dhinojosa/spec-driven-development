@@ -5,7 +5,7 @@ Governed by: `@ACC-0001`
 Feature file:
 
 ```text
-full-application-acceptance/src/main/resources/com/evolutionnext/features/account/account-access.feature
+full-application-acceptance/src/test/resources/com/evolutionnext/features/account/account-access.feature
 ```
 
 Step definition path:

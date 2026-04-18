@@ -8,7 +8,7 @@ for business-facing behavior.
 Acceptance behavior lives in:
 
 ```text
-full-application-acceptance/src/main/resources/<package-name>/*.feature
+full-application-acceptance/src/test/resources/<package-name>/*.feature
 ```
 
 Each governed feature or scenario must have an identifier tag:
@@ -20,13 +20,13 @@ Feature: Account presence
 
 ## Cucumber Layout
 
-Cucumber feature specifications live under `src/main/resources` in the
+Cucumber feature specifications live under `src/test/resources` in the
 `full-application-acceptance` module.
 
 Use this path shape:
 
 ```text
-full-application-acceptance/src/main/resources/<package-name>/*.feature
+full-application-acceptance/src/test/resources/<package-name>/*.feature
 ```
 
 Cucumber step definitions live under `src/test/java` in the

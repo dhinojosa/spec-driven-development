@@ -2,19 +2,16 @@ package com.evolutionnext.features.account.application.service;
 
 import com.evolutionnext.features.account.application.command.AccountCommand;
 import com.evolutionnext.features.account.application.command.AccountResult;
-import com.evolutionnext.features.account.application.query.AccountQueryResult;
 import com.evolutionnext.features.account.domain.model.Account;
-import com.evolutionnext.features.account.domain.model.AccountId;
 import com.evolutionnext.features.account.domain.model.PasswordCredential;
 import com.evolutionnext.features.account.domain.model.UserName;
 import com.evolutionnext.features.account.port.in.AnonymousAccountCommandPort;
-import com.evolutionnext.features.account.port.in.AnonymousAccountQueryPort;
 import com.evolutionnext.features.account.port.out.AccountRepository;
 
-public final class AccountApplicationService implements AnonymousAccountCommandPort, AnonymousAccountQueryPort {
+public final class AnonymousAccountCommandApplicationService implements AnonymousAccountCommandPort {
     private final AccountRepository accountRepository;
 
-    public AccountApplicationService(AccountRepository accountRepository) {
+    public AnonymousAccountCommandApplicationService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
@@ -24,22 +21,6 @@ public final class AccountApplicationService implements AnonymousAccountCommandP
             case AccountCommand.RegisterAccount registerAccount -> register(registerAccount);
             case AccountCommand.LogIn logIn -> logIn(logIn);
         };
-    }
-
-    @Override
-    public AccountQueryResult findById(AccountId accountId) {
-        return accountRepository.findById(accountId)
-            .<AccountQueryResult>map(account -> new AccountQueryResult.AccountFound(account.accountId(),
-                account.userName().value()))
-            .orElseGet(() -> new AccountQueryResult.AccountNotFound(accountId.value().toString()));
-    }
-
-    @Override
-    public AccountQueryResult findByUserName(String userName) {
-        return accountRepository.findByUserName(userName)
-            .<AccountQueryResult>map(account -> new AccountQueryResult.AccountFound(account.accountId(),
-                account.userName().value()))
-            .orElseGet(() -> new AccountQueryResult.AccountNotFound(userName));
     }
 
     private AccountResult register(AccountCommand.RegisterAccount registerAccount) {

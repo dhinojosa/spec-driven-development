@@ -64,7 +64,7 @@ test type, module, target behavior, and supporting tools such as Cucumber,
 Testcontainers, jqwik, or controller test utilities.
 
 When a task includes Cucumber acceptance coverage, include direct action items
-for feature files under `full-application-acceptance/src/main/resources`, step
+for feature files under `full-application-acceptance/src/test/resources`, step
 definitions under `full-application-acceptance/src/test/java`, scenario state,
 and `cucumber.properties` when glue or dependency injection configuration is
 required.
