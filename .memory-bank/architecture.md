@@ -577,3 +577,38 @@ Keep the dependency direction clear:
 - adapters implement ports
 - controllers call application services
 - must be enforced by arch unit
+
+## ArchUnit Enforcement
+
+Use architecture tests in `full-application` to enforce the hexagonal and DDD
+boundaries.
+
+The project should keep the latest ArchUnit dependency available. As of
+ArchUnit `1.4.1`, ArchUnit imports class files through Java 25, while this
+project compiles Java 26 class files. Until ArchUnit supports Java 26 bytecode
+directly, enforce the same rules with JDK tooling such as `jdeps` and
+reflection from the architecture test class. Document that exception in the
+test class.
+
+Architecture rules should cover:
+
+- hexagonal dependency direction between domain, application, ports, and
+  infrastructure
+- domain purity from application, port, infrastructure, HTTP, and runner packages
+- application independence from infrastructure adapters and HTTP handlers
+- port independence from infrastructure adapters
+- HTTP handler placement under `infrastructure/adapter/in`
+- repository adapter placement under `infrastructure/adapter/out`
+- domain model placement under `domain/model`
+- domain event placement under `domain/events`
+- domain event past-tense naming
+- domain service placement and statelessness
+- port naming for `<Role><Aggregate>CommandPort` and
+  `<Role><Aggregate>QueryPort`
+- repository port naming under `port/out`
+- command application services implementing command ports only
+- query application services implementing query ports only
+- no application service implementing both a command port and query port
+
+When a rule needs an intentional exception, document the exception and the
+reason in the ArchUnit test class.

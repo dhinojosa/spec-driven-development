@@ -34,4 +34,11 @@ public final class AccountArbitrary {
                 new UserName(userName),
                 new PasswordCredential(password)));
     }
+
+    public static Arbitrary<Account> accountsWithUserNamePrefix(String prefix) {
+        return Combinators.combine(userNames(), passwords())
+            .as((userName, password) -> Account.register(AccountId.newId(),
+                new UserName(prefix + userName),
+                new PasswordCredential(password)));
+    }
 }

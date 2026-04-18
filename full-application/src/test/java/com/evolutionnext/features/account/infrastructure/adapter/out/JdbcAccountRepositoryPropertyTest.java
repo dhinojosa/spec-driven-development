@@ -9,12 +9,16 @@ import net.jqwik.testcontainers.Container;
 import net.jqwik.testcontainers.Testcontainers;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers(disabledWithoutDocker = true)
 class JdbcAccountRepositoryPropertyTest {
     @Container(restartPerTry = false)
     static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:15.2");
+
+    private final String userNamePrefix = "jdbc-" + UUID.randomUUID() + "-";
 
     @Property(tries = 3)
     void everySavedAccountCanBeFoundById(@ForAll("accounts") Account account) {
@@ -31,6 +35,6 @@ class JdbcAccountRepositoryPropertyTest {
 
     @Provide
     net.jqwik.api.Arbitrary<Account> accounts() {
-        return AccountArbitrary.accounts();
+        return AccountArbitrary.accountsWithUserNamePrefix(userNamePrefix);
     }
 }
