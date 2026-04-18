@@ -35,6 +35,42 @@ Testcontainers, Cucumber, Log4j, SLF4J, jqwik, AssertJ, Jackson, and REST Assure
 The parent POM also pins Maven plugin versions for resources, compiler, Surefire,
 Failsafe, Surefire reports, and project info reports.
 
+## Local Application
+
+Start the local Postgres database:
+
+```bash
+cd full-application
+docker compose up -d
+```
+
+Run the application from Maven:
+
+```bash
+DATABASE_URL=jdbc:postgresql://localhost:5432/orders \
+DATABASE_USERNAME=postgres \
+DATABASE_PASSWORD=postgres \
+PORT=8080 \
+mvn -pl full-application exec:java
+```
+
+Run the application from IntelliJ with:
+
+- main class: `com.evolutionnext.Runner`
+- environment variable: `DATABASE_URL=jdbc:postgresql://localhost:5432/orders`
+- environment variable: `DATABASE_USERNAME=postgres`
+- environment variable: `DATABASE_PASSWORD=postgres`
+- environment variable: `PORT=8080`
+
+If `DATABASE_URL` is unset, the application uses the in-memory account
+repository.
+
+Manual URLs:
+
+- `http://localhost:8080/health`
+- `http://localhost:8080/account/register`
+- `http://localhost:8080/account/login`
+
 ## License
 
 This project is licensed under the MIT License. See `LICENSE`.
