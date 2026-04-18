@@ -1,3 +1,4 @@
 target/
 .idea/
 NOTES.md
+.jqwik-database

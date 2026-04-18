@@ -351,6 +351,11 @@ behavior across meaningful cases.
 Use Testcontainers for tests that require real infrastructure, especially
 repository and persistence behavior.
 
+When jqwik and Testcontainers are used together in the same test, add the
+`net.jqwik:jqwik-testcontainers` dependency and use its Testcontainers
+annotations. This avoids lifecycle races between jqwik property execution and
+container startup.
+
 ### Repository Properties
 
 For repositories, every generated record that is created and saved must be
