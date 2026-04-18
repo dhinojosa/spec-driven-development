@@ -8,7 +8,7 @@ for business-facing behavior.
 Acceptance behavior lives in:
 
 ```text
-full-application-acceptance/src/test/resources/features/
+full-application-acceptance/src/main/resources/<package-name>/*.feature
 ```
 
 Each governed feature or scenario must have an identifier tag:
@@ -17,6 +17,29 @@ Each governed feature or scenario must have an identifier tag:
 @ACC-0001
 Feature: Account presence
 ```
+
+## Cucumber Layout
+
+Cucumber feature specifications live under `src/main/resources` in the
+`full-application-acceptance` module.
+
+Use this path shape:
+
+```text
+full-application-acceptance/src/main/resources/<package-name>/*.feature
+```
+
+Cucumber step definitions live under `src/test/java` in the
+`full-application-acceptance` module.
+
+Use package names that correspond to the feature package where practical, so the
+feature files and step definitions remain easy to map.
+
+Acceptance tests may require shared scenario state. When state is needed, use
+Cucumber dependency injection instead of static mutable state.
+
+Add or update `cucumber.properties` when Cucumber glue, object factory, plugin,
+or dependency injection configuration is required.
 
 ## Task Mapping
 

@@ -416,6 +416,84 @@ The Jib image is used by `full-application-e2e` as the application under test.
 The e2e module should use Docker Compose to run the application image and
 supporting services such as Postgres.
 
+The `full-application-e2e` module should keep an `.env` file in
+`src/main/resources` with the application image version:
+
+```text
+FULL_APPLICATION_VERSION=${project.version}
+```
+
+The `${project.version}` value must be interpolated by the Maven Resources
+Plugin during `process-resources`.
+
+Use the latest available `maven-resources-plugin` version, following this
+configuration shape:
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-resources-plugin</artifactId>
+    <version><!-- Use the latest version. --></version>
+    <executions>
+        <execution>
+            <id>generate-env-file</id>
+            <phase>process-resources</phase>
+            <goals>
+                <goal>resources</goal>
+            </goals>
+            <configuration>
+                <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <filtering>true</filtering>
+                        <includes>
+                            <include>.env</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+
+End-to-end tests should use Testcontainers and REST Assured for HTTP-facing
+verification. Use jqwik with them when generated inputs add meaningful coverage.
+Use Selenium when browser-level behavior is part of the business flow.
+
+The e2e Docker Compose file should follow this shape:
+
+```yaml
+services:
+    full-application:
+        image: dhinojosa/full-application:${FULL_APPLICATION_VERSION:-1.0-SNAPSHOT}
+        ports:
+            - "8080:8080"
+        depends_on:
+            - postgres
+        environment:
+            DATABASE_URL: jdbc:postgresql://postgres:5432/orders
+            DATABASE_USERNAME: postgres
+            DATABASE_PASSWORD: postgres
+
+    postgres:
+        image: postgres:15.2
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: orders
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+    postgres_data:
+```
+
+Include `init.sql` when the e2e database requires schema or seed data before the
+application starts.
+
 ### Jib Container Image
 
 Configure Jib in `full-application`.

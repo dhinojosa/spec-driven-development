@@ -25,6 +25,7 @@ Each task file should include:
 - title with the identifier and feature name
 - governed spec identifier
 - feature file path
+- step definition path
 - business behavior summary
 - implementation plan as markdown checkboxes grouped by category
 - validation checklist
@@ -48,6 +49,12 @@ For each planned test, describe how it will be created. Include the intended
 test type, module, target behavior, and supporting tools such as Cucumber,
 Testcontainers, jqwik, or controller test utilities.
 
+When a task includes Cucumber acceptance coverage, include direct action items
+for feature files under `full-application-acceptance/src/main/resources`, step
+definitions under `full-application-acceptance/src/test/java`, scenario state,
+and `cucumber.properties` when glue or dependency injection configuration is
+required.
+
 Task plans must include the jqwik and Testcontainers properties defined in
 `.memory-bank/architecture.md` when the feature includes repositories,
 application services, or controllers.
@@ -55,6 +62,11 @@ application services, or controllers.
 The E2E Testing category must include Jib image creation for `full-application`
 and Docker Compose wiring in `full-application-e2e` when a feature requires
 end-to-end verification.
+
+When e2e verification applies, include direct action items for creating or
+updating the `full-application-e2e` `.env` resource, Maven resource filtering,
+Docker Compose file, optional `init.sql`, and Testcontainers/REST Assured,
+jqwik, or Selenium tests as appropriate.
 
 If a category does not apply to a feature, keep the category visible and explain
 why it is unnecessary for that feature.
