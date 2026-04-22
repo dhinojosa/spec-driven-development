@@ -18,6 +18,17 @@ Each governed feature or scenario must have an identifier tag:
 Feature: Account presence
 ```
 
+Behavioral revisions to an existing governed feature use a suffixed identifier:
+
+```gherkin
+@ACC-0001-02
+Scenario: Anonymous user starts from the main page
+```
+
+Use the root identifier, such as `ACC-0001`, as the stable feature identity.
+Use suffixed revisions, such as `ACC-0001-02`, when an existing governed
+feature changes behavior, flow, validation, output, or acceptance intent.
+
 ## Cucumber Layout
 
 Cucumber feature specifications live under `src/test/resources` in the
@@ -51,6 +62,14 @@ Example:
 @ACC-0001 -> .ai-tasks/account-presence-ACC-0001.md
 ```
 
+Revision identifiers map to their own task files.
+
+Example:
+
+```text
+@ACC-0001-02 -> .ai-tasks/account-presence-ACC-0001-02.md
+```
+
 The task file contains the implementation plan as markdown checkboxes.
 
 ## Business Versus Technical Tasks
@@ -67,11 +86,17 @@ added.
 
 1. Start from the Cucumber spec.
 2. Add or update the spec identifier tag.
-3. Create or update the matching `.ai-tasks` file.
-4. Present the task plan before implementation.
-5. Implement vertically through the relevant modules.
-6. Mark completed task checkboxes.
-7. Run validation appropriate to the changed behavior.
+3. If the spec change is behaviorally new, create a new suffixed identifier and
+   matching `.ai-tasks` file.
+4. If the spec change is only wording or clarification with no behavioral
+   impact, update the existing task notes instead of creating a revision task.
+5. Present the task plan before implementation.
+6. Implement vertically through the relevant modules.
+7. Mark completed task checkboxes.
+8. Run validation appropriate to the changed behavior.
+
+When only one scenario in a feature changes, prefer applying the suffixed
+revision tag at the scenario level so governance remains precise.
 
 ## Vertical Slice Rule
 

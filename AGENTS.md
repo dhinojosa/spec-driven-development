@@ -13,7 +13,11 @@ Before making feature changes, read:
 
 - Business behavior starts from Cucumber specs in `full-application-acceptance`.
 - Governed specs use identifier tags such as `@ACC-0001`.
+- Behavioral revisions to an existing governed feature use suffixed tags such as `@ACC-0001-02`.
 - Each governed spec must have a matching task file in `.ai-tasks/`.
+- Create a new suffixed task file when a spec change alters behavior, flow, validation, output, or acceptance intent.
+- Update the existing task only when the spec edit is non-behavioral wording or clarification.
+- Prefer scenario-level revision tags when only one scenario changed.
 - Show the task plan before implementing feature behavior.
 - Implement features as vertical slices through the relevant modules.
 - Mark completed task checkboxes when work is done.

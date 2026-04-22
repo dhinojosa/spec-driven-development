@@ -18,6 +18,14 @@ Example:
 
 The identifier must match a Cucumber tag such as `@ACC-0001`.
 
+Behavioral revisions use a suffixed identifier and matching filename.
+
+Example:
+
+```text
+.ai-tasks/account-presence-ACC-0001-02.md
+```
+
 ## Task Identifiers
 
 Use `ACC-####` for business-facing acceptance tasks governed by Cucumber specs.
@@ -26,6 +34,17 @@ Use `TECH-####` for technical tasks that are not directly tied to business
 behavior.
 
 `ACC-####` tasks must reference a matching Cucumber tag, such as `@ACC-0001`.
+
+When an existing governed feature changes behavior, flow, validation, output,
+or acceptance intent, create a suffixed business identifier such as
+`ACC-0001-02` instead of reusing the original task identifier.
+
+When a spec edit is only wording cleanup or clarification with no behavioral
+effect, update the existing task file or notes rather than creating a revision
+task.
+
+When only one scenario changes, prefer tagging the scenario with the suffixed
+identifier instead of tagging the whole feature with the revision.
 
 `TECH-####` tasks must state why no Cucumber spec applies.
 
