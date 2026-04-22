@@ -1,3 +1,150 @@
 body {
     font-family: system-ui, sans-serif;
+    margin: 0;
+}
+
+.welcome-page {
+    background: #f3f5ef;
+    color: #172312;
+}
+
+.welcome-hero {
+    align-items: end;
+    background: #dbe9c9;
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+    min-height: 64svh;
+    overflow: hidden;
+    padding: 2.25rem clamp(1.25rem, 4vw, 4rem) 1rem;
+}
+
+.welcome-hero__content {
+    max-width: 36rem;
+    z-index: 1;
+}
+
+.welcome-kicker {
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+}
+
+.welcome-hero h1 {
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    line-height: 0.95;
+    margin: 0;
+    max-width: 10ch;
+}
+
+.welcome-summary {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin: 1.25rem 0 0;
+    max-width: 32rem;
+}
+
+.welcome-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+}
+
+.welcome-actions a {
+    background: #d8311b;
+    border-radius: 6px;
+    color: #fff8ef;
+    padding: 0.85rem 1.15rem;
+    text-decoration: none;
+}
+
+.welcome-actions a:last-child {
+    background: #255f2a;
+}
+
+.welcome-hero__visuals {
+    align-items: end;
+    display: grid;
+    justify-items: center;
+    min-height: 21rem;
+    position: relative;
+}
+
+.welcome-hero__timer {
+    border-radius: 8px;
+    box-shadow: 0 20px 50px rgba(23, 35, 18, 0.18);
+    max-width: min(100%, 32rem);
+    transform: rotate(-3deg);
+    width: 100%;
+}
+
+.welcome-hero__tomato {
+    bottom: -1rem;
+    filter: drop-shadow(0 22px 26px rgba(23, 35, 18, 0.16));
+    max-width: min(36vw, 15rem);
+    position: absolute;
+    right: 0;
+}
+
+.welcome-band {
+    background: #172312;
+    color: #f3f5ef;
+    padding: 0.75rem clamp(1.25rem, 4vw, 4rem);
+}
+
+.welcome-band__content {
+    max-width: 70rem;
+}
+
+.welcome-band p {
+    font-size: 1.05rem;
+    margin: 0;
+}
+
+.welcome-rhythm {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+    padding: 1.75rem clamp(1.25rem, 4vw, 4rem) 3rem;
+}
+
+.welcome-rhythm h2 {
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    line-height: 1;
+    margin: 0 0 0.75rem;
+}
+
+.welcome-rhythm p,
+.welcome-rhythm li {
+    font-size: 1rem;
+    line-height: 1.55;
+}
+
+.welcome-rhythm ol {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+@media (max-width: 860px) {
+    .welcome-hero,
+    .welcome-rhythm {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-hero {
+        min-height: auto;
+        padding-bottom: 1rem;
+    }
+
+    .welcome-hero__visuals {
+        min-height: 16rem;
+    }
+
+    .welcome-hero__tomato {
+        bottom: -0.5rem;
+        max-width: 7rem;
+    }
 }

@@ -4,6 +4,7 @@ import com.evolutionnext.features.account.application.service.AnonymousAccountCo
 import com.evolutionnext.features.account.application.service.AnonymousAccountQueryApplicationService;
 import com.evolutionnext.features.account.infrastructure.adapter.in.AccountHttpHandler;
 import com.evolutionnext.features.account.port.out.AccountRepository;
+import com.evolutionnext.features.welcome.infrastructure.adapter.in.WelcomeHttpHandler;
 import com.evolutionnext.http.HealthHandler;
 import com.evolutionnext.http.ResourceLoader;
 import com.evolutionnext.http.StaticAssetHandler;
@@ -22,6 +23,7 @@ public final class AccountApplication {
             server.createContext("/health", new HealthHandler());
             server.createContext("/assets", new StaticAssetHandler(resourceLoader));
             server.createContext("/account", new AccountHttpHandler(commandService, queryService, resourceLoader));
+            server.createContext("/", new WelcomeHttpHandler(resourceLoader));
             server.start();
             return server;
         } catch (IOException exception) {
