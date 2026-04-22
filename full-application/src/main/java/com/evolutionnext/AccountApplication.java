@@ -25,6 +25,14 @@ public final class AccountApplication {
             server.createContext("/assets", new SafeHttpHandler(new StaticAssetHandler(resourceLoader)));
             server.createContext("/account",
                 new SafeHttpHandler(new AccountHttpHandler(commandService, queryService, resourceLoader)));
+            server.createContext("/dashboard",
+                new SafeHttpHandler(new AccountHttpHandler(commandService, queryService, resourceLoader)));
+            server.createContext("/todo-today",
+                new SafeHttpHandler(new AccountHttpHandler(commandService, queryService, resourceLoader)));
+            server.createContext("/activity-inventory",
+                new SafeHttpHandler(new AccountHttpHandler(commandService, queryService, resourceLoader)));
+            server.createContext("/record-sheet",
+                new SafeHttpHandler(new AccountHttpHandler(commandService, queryService, resourceLoader)));
             server.createContext("/", new SafeHttpHandler(new WelcomeHttpHandler(resourceLoader)));
             server.start();
             return server;

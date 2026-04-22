@@ -13,6 +13,7 @@ import io.cucumber.java.en.When;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -66,6 +67,7 @@ public final class AccountAccessSteps {
     public void accountExistsForUserNameAndPassword(String userName, String password) throws Exception {
         registerWithUserNameAndPassword(userName, password);
         accountExistsForUserName(userName);
+        state.clearAuthenticationCookie();
     }
 
     @And("the user is on the login page")
@@ -121,16 +123,74 @@ public final class AccountAccessSteps {
             .contains("name=\"password\" type=\"password\" autocomplete=\"new-password\" value=\"\"");
     }
 
+    @Given("the user is logged in")
+    public void userIsLoggedIn() throws Exception {
+        logInWithUserNameAndPassword(state.lastUserName(), "correct-horse-battery-staple");
+        userIsTakenToDashboardPage();
+    }
+
+    @And("^the user is on the (dashboard|todo today|activity inventory|record sheet) page$")
+    public void userIsOnSecurePage(String page) throws Exception {
+        var path = securePagePaths().get(page);
+        state.rememberLastResponse(get(path));
+        assertThat(state.lastResponse().statusCode()).isEqualTo(200);
+        assertThat(state.lastResponse().body()).contains("Log out");
+    }
+
+    @When("the user clicks the log out button")
+    public void userClicksTheLogOutButton() throws Exception {
+        assertThat(state.lastResponse().body()).contains("Log out");
+        state.rememberLastResponse(get("/account/logout"));
+    }
+
+    @Then("the user is returned to the home page")
+    public void userIsReturnedToTheHomePage() {
+        assertThat(state.lastResponse().statusCode()).isEqualTo(200);
+        assertThat(state.lastResponse().body()).contains("One focused session at a time.");
+    }
+
+    @And("the home page does not show secure-area navigation")
+    public void homePageDoesNotShowSecureAreaNavigation() {
+        assertThat(state.lastResponse().body()).doesNotContain("/dashboard");
+        assertThat(state.lastResponse().body()).doesNotContain("/todo-today");
+        assertThat(state.lastResponse().body()).doesNotContain("/activity-inventory");
+        assertThat(state.lastResponse().body()).doesNotContain("/record-sheet");
+        assertThat(state.lastResponse().body()).doesNotContain("Log out");
+    }
+
     private HttpResponse<String> get(String path) throws Exception {
-        return httpClient.send(HttpRequest.newBuilder(state.baseUri().resolve(path)).GET().build(),
-            HttpResponse.BodyHandlers.ofString());
+        return send(HttpRequest.newBuilder(state.baseUri().resolve(path)).GET());
     }
 
     private HttpResponse<String> post(String path, String body) throws Exception {
-        return httpClient.send(HttpRequest.newBuilder(state.baseUri().resolve(path))
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .build(),
-            HttpResponse.BodyHandlers.ofString());
+        return send(HttpRequest.newBuilder(state.baseUri().resolve(path))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .POST(HttpRequest.BodyPublishers.ofString(body)));
+    }
+
+    private HttpResponse<String> send(HttpRequest.Builder builder) throws Exception {
+        if (state.authenticationCookie() != null) {
+            builder.header("Cookie", state.authenticationCookie());
+        }
+        var response = httpClient.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        response.headers().firstValue("Set-Cookie").ifPresent(this::rememberAuthenticationCookie);
+        return response;
+    }
+
+    private void rememberAuthenticationCookie(String setCookieHeader) {
+        var cookie = setCookieHeader.split(";", 2)[0];
+        if (cookie.endsWith("=")) {
+            state.clearAuthenticationCookie();
+        } else {
+            state.rememberAuthenticationCookie(cookie);
+        }
+    }
+
+    private static Map<String, String> securePagePaths() {
+        return Map.of(
+            "dashboard", "/dashboard",
+            "todo today", "/todo-today",
+            "activity inventory", "/activity-inventory",
+            "record sheet", "/record-sheet");
     }
 }

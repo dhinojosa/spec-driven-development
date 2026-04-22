@@ -33,3 +33,19 @@ Feature: Account access
         When they log in with user name "casey" and password "wrong-password"
         Then the user remains on the login page
         And the page shows an invalid credentials message
+
+    @ACC-0001-05
+    Scenario Outline: Authenticated user can log out from any secure page
+        Given an account exists for user name "casey" and password "correct-horse-battery-staple"
+        And the user is logged in
+        And the user is on the <page> page
+        When the user clicks the log out button
+        Then the user is returned to the home page
+        And the home page does not show secure-area navigation
+
+        Examples:
+            | page               |
+            | dashboard          |
+            | todo today         |
+            | activity inventory |
+            | record sheet       |

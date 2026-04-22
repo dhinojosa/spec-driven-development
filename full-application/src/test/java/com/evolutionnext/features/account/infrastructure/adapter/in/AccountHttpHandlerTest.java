@@ -19,6 +19,7 @@ class AccountHttpHandlerTest {
     private com.sun.net.httpserver.HttpServer server;
     private URI baseUri;
     private final HttpClient httpClient = HttpClient.newHttpClient();
+    private String authenticationCookie;
 
     @BeforeEach
     void startServer() {
@@ -29,6 +30,7 @@ class AccountHttpHandlerTest {
     @AfterEach
     void stopServer() {
         server.stop(0);
+        authenticationCookie = null;
     }
 
     @Test
@@ -68,6 +70,7 @@ class AccountHttpHandlerTest {
     @Test
     void successfulLoginShowsDashboardPage() throws Exception {
         post("/account/register", "userName=casey&password=correct-horse-battery-staple");
+        authenticationCookie = null;
 
         var response = post("/account/login", "userName=casey&password=correct-horse-battery-staple");
 
@@ -89,8 +92,29 @@ class AccountHttpHandlerTest {
     }
 
     @Test
+    void securePagesShowLogoutAndLogoutReturnsHomePage() throws Exception {
+        post("/account/register", "userName=casey&password=correct-horse-battery-staple");
+
+        assertThat(get("/dashboard").body()).contains("Log out");
+        assertThat(get("/todo-today").body()).contains("Log out");
+        assertThat(get("/activity-inventory").body()).contains("Log out");
+        assertThat(get("/record-sheet").body()).contains("Log out");
+
+        var response = get("/account/logout");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body()).contains("One focused session at a time.");
+        assertThat(response.body()).doesNotContain("/dashboard");
+        assertThat(response.body()).doesNotContain("/todo-today");
+        assertThat(response.body()).doesNotContain("/activity-inventory");
+        assertThat(response.body()).doesNotContain("/record-sheet");
+        assertThat(response.body()).doesNotContain("Log out");
+    }
+
+    @Test
     void badCredentialsShowInvalidMessage() throws Exception {
         post("/account/register", "userName=casey&password=correct-horse-battery-staple");
+        authenticationCookie = null;
 
         var response = post("/account/login", "userName=casey&password=wrong-password");
 
@@ -101,16 +125,31 @@ class AccountHttpHandlerTest {
     }
 
     private HttpResponse<String> get(String path) throws Exception {
-        return httpClient.send(HttpRequest.newBuilder(baseUri.resolve(path)).GET().build(),
-            HttpResponse.BodyHandlers.ofString());
+        return send(HttpRequest.newBuilder(baseUri.resolve(path)).GET());
     }
 
     private HttpResponse<String> post(String path, String body) throws Exception {
-        return httpClient.send(HttpRequest.newBuilder(baseUri.resolve(path))
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .build(),
-            HttpResponse.BodyHandlers.ofString());
+        return send(HttpRequest.newBuilder(baseUri.resolve(path))
+            .header("Content-Type", "application/x-www-form-urlencoded")
+            .POST(HttpRequest.BodyPublishers.ofString(body)));
+    }
+
+    private HttpResponse<String> send(HttpRequest.Builder builder) throws Exception {
+        if (authenticationCookie != null) {
+            builder.header("Cookie", authenticationCookie);
+        }
+        var response = httpClient.send(builder.build(), HttpResponse.BodyHandlers.ofString());
+        response.headers().firstValue("Set-Cookie").ifPresent(this::rememberAuthenticationCookie);
+        return response;
+    }
+
+    private void rememberAuthenticationCookie(String setCookieHeader) {
+        var cookie = setCookieHeader.split(";", 2)[0];
+        if (cookie.endsWith("=")) {
+            authenticationCookie = null;
+        } else {
+            authenticationCookie = cookie;
+        }
     }
 
     private static String encode(String value) {

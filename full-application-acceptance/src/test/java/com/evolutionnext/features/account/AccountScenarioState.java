@@ -12,6 +12,7 @@ public final class AccountScenarioState {
     private URI baseUri;
     private HttpResponse<String> lastResponse;
     private String lastUserName;
+    private String authenticationCookie;
 
     public void rememberServer(HttpServer server) {
         this.server = server;
@@ -36,6 +37,18 @@ public final class AccountScenarioState {
 
     public String lastUserName() {
         return lastUserName;
+    }
+
+    public void rememberAuthenticationCookie(String authenticationCookie) {
+        this.authenticationCookie = authenticationCookie;
+    }
+
+    public String authenticationCookie() {
+        return authenticationCookie;
+    }
+
+    public void clearAuthenticationCookie() {
+        this.authenticationCookie = null;
     }
 
     public void stopServer() {

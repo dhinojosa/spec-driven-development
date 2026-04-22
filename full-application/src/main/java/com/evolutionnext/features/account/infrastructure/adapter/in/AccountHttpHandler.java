@@ -14,6 +14,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.UUID;
 
 public final class AccountHttpHandler implements HttpHandler {
@@ -41,8 +42,18 @@ public final class AccountHttpHandler implements HttpHandler {
             HttpResponses.html(exchange, 200, resourceLoader.text("account/anonymous/login.html"));
         } else if ("POST".equals(method) && "/account/login".equals(path)) {
             logIn(exchange);
+        } else if ("GET".equals(method) && "/dashboard".equals(path)) {
+            securePage(exchange, "account/dashboard.html");
+        } else if ("GET".equals(method) && "/todo-today".equals(path)) {
+            securePage(exchange, "account/todo-today.html");
+        } else if ("GET".equals(method) && "/activity-inventory".equals(path)) {
+            securePage(exchange, "account/activity-inventory.html");
+        } else if ("GET".equals(method) && "/record-sheet".equals(path)) {
+            securePage(exchange, "account/record-sheet.html");
+        } else if ("GET".equals(method) && "/account/logout".equals(path)) {
+            logOut(exchange);
         } else if ("GET".equals(method) && "/account/pomodoro".equals(path)) {
-            HttpResponses.html(exchange, 200, resourceLoader.text("account/pomodoro.html"));
+            securePage(exchange, "account/pomodoro.html");
         } else if ("GET".equals(method) && "/account".equals(path)) {
             findAccount(exchange);
         } else {
@@ -55,7 +66,8 @@ public final class AccountHttpHandler implements HttpHandler {
         var result = commandPort.execute(new AccountCommand.RegisterAccount(AccountId.newId(),
             form.getOrDefault("userName", ""),
             form.getOrDefault("password", "")));
-        if (result instanceof AccountResult.AccountRegistered) {
+        if (result instanceof AccountResult.AccountRegistered(AccountId ignored, String userName)) {
+            rememberAuthenticatedUser(exchange, userName);
             HttpResponses.html(exchange, 200, resourceLoader.text("account/dashboard.html"));
         } else if (result instanceof AccountResult.InvalidRegistration(String userName, String message)) {
             HttpResponses.html(exchange, 422, registrationPage(userName, message));
@@ -70,11 +82,25 @@ public final class AccountHttpHandler implements HttpHandler {
         var form = form(exchange);
         var result = commandPort.execute(new AccountCommand.LogIn(form.getOrDefault("userName", ""),
             form.getOrDefault("password", "")));
-        if (result instanceof AccountResult.LogInSucceeded) {
+        if (result instanceof AccountResult.LogInSucceeded(AccountId ignored, String userName)) {
+            rememberAuthenticatedUser(exchange, userName);
             HttpResponses.html(exchange, 200, resourceLoader.text("account/dashboard.html"));
         } else {
             HttpResponses.html(exchange, 401, resourceLoader.text("account/anonymous/login-invalid.html"));
         }
+    }
+
+    private void logOut(HttpExchange exchange) throws IOException {
+        clearAuthenticatedUser(exchange);
+        HttpResponses.html(exchange, 200, resourceLoader.text("welcome/anonymous/index.html"));
+    }
+
+    private void securePage(HttpExchange exchange, String resourceName) throws IOException {
+        if (!isAuthenticated(exchange)) {
+            HttpResponses.html(exchange, 401, resourceLoader.text("welcome/anonymous/index.html"));
+            return;
+        }
+        HttpResponses.html(exchange, 200, resourceLoader.text(resourceName));
     }
 
     private void findAccount(HttpExchange exchange) throws IOException {
@@ -120,5 +146,22 @@ public final class AccountHttpHandler implements HttpHandler {
             .replace("\"", "&quot;")
             .replace("<", "&lt;")
             .replace(">", "&gt;");
+    }
+
+    private static void rememberAuthenticatedUser(HttpExchange exchange, String userName) {
+        exchange.getResponseHeaders().add("Set-Cookie",
+            "account_user=" + userName + "; Path=/; HttpOnly; SameSite=Lax");
+    }
+
+    private static void clearAuthenticatedUser(HttpExchange exchange) {
+        exchange.getResponseHeaders().add("Set-Cookie",
+            "account_user=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax");
+    }
+
+    private static boolean isAuthenticated(HttpExchange exchange) {
+        return exchange.getRequestHeaders().getOrDefault("Cookie", java.util.List.of()).stream()
+            .flatMap(header -> Arrays.stream(header.split(";")))
+            .map(String::trim)
+            .anyMatch(cookie -> cookie.startsWith("account_user=") && !cookie.equals("account_user="));
     }
 }
