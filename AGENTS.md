@@ -8,6 +8,7 @@ Before making feature changes, read:
 - `.memory-bank/architecture.md`
 - `.memory-bank/spec-driven-development.md`
 - `.memory-bank/task-workflow.md`
+- `.memory-bank/ubiquitous-language.md`
 
 ## Required Workflow
 
@@ -18,6 +19,7 @@ Before making feature changes, read:
 - Create a new suffixed task file when a spec change alters behavior, flow, validation, output, or acceptance intent.
 - Update the existing task only when the spec edit is non-behavioral wording or clarification.
 - Prefer scenario-level revision tags when only one scenario changed.
+- Keep specs, tasks, tests, classes, handlers, routes, and user-facing copy aligned to `.memory-bank/ubiquitous-language.md`.
 - Show the task plan before implementing feature behavior.
 - Implement features as vertical slices through the relevant modules.
 - Mark completed task checkboxes when work is done.

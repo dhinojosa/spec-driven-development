@@ -3,6 +3,9 @@
 This repository uses Cucumber acceptance specifications as the source of truth
 for business-facing behavior.
 
+Specifications and implementation terms should adhere to the shared vocabulary
+in `.memory-bank/ubiquitous-language.md`.
+
 ## Source Of Truth
 
 Acceptance behavior lives in:
@@ -48,6 +51,10 @@ feature files and step definitions remain easy to map.
 
 Acceptance tests may require shared scenario state. When state is needed, use
 Cucumber dependency injection instead of static mutable state.
+
+Prefer wording in feature files and step definitions that matches the
+ubiquitous language exactly, especially for page names, user roles, and
+business actions.
 
 Add or update `cucumber.properties` when Cucumber glue, object factory, plugin,
 or dependency injection configuration is required.

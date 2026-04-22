@@ -13,6 +13,9 @@ feature delivery.
 - Reserve `docs/` for future user-facing or project documentation.
 - Prefer small, explicit changes.
 - Prefer clear identifiers that connect specs, tasks, and implementation work.
+- Maintain shared domain terms in `.memory-bank/ubiquitous-language.md`.
+- Keep tests, classes, specs, routes, handlers, and user-facing copy aligned to
+  the ubiquitous language.
 
 ## Web Application Constraints
 
