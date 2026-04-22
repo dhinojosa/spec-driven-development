@@ -9,4 +9,4 @@ Feature: Welcome Page
         When I navigate to the home page
         Then I should see a welcome page
         And I should see a picture of a tomato
-        And I should see the text "Pomodoro Time!"
+        And I should see a Pomodoro Time image
