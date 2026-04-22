@@ -32,6 +32,28 @@ class AccountHttpHandlerTest {
     }
 
     @Test
+    void registerPageUsesSharedAccountDesign() throws Exception {
+        var response = get("/account/register");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body()).contains("Register account");
+        assertThat(response.body()).contains("/assets/site.css");
+        assertThat(response.body()).contains("/assets/welcome-pomodoro-technique.jpg");
+        assertThat(response.body()).contains("/assets/welcome-tomato.png");
+    }
+
+    @Test
+    void loginPageUsesSharedAccountDesign() throws Exception {
+        var response = get("/account/login");
+
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body()).contains("Login");
+        assertThat(response.body()).contains("/assets/site.css");
+        assertThat(response.body()).contains("/assets/welcome-pomodoro-technique.jpg");
+        assertThat(response.body()).contains("/assets/welcome-tomato.png");
+    }
+
+    @Test
     void registrationPostCanBeObservedThroughGet() throws Exception {
         var response = post("/account/register", "userName=casey&password=correct-horse-battery-staple");
 
@@ -56,6 +78,8 @@ class AccountHttpHandlerTest {
 
         assertThat(response.statusCode()).isEqualTo(401);
         assertThat(response.body()).contains("Invalid user name or password");
+        assertThat(response.body()).contains("/assets/site.css");
+        assertThat(response.body()).contains("/assets/welcome-pomodoro-technique.jpg");
     }
 
     private HttpResponse<String> get(String path) throws Exception {

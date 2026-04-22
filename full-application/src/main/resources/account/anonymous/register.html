@@ -2,14 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Register account</title>
+    <link rel="stylesheet" href="/assets/site.css">
 </head>
-<body>
-<h1>Register account</h1>
-<form method="post" action="/account/register">
-    <label>User name <input name="userName" autocomplete="username"></label>
-    <label>Password <input name="password" type="password" autocomplete="new-password"></label>
-    <button type="submit">Register</button>
-</form>
+<body class="account-page">
+<main class="account-shell">
+    <section class="account-intro">
+        <div class="account-intro__content">
+            <p class="account-intro__eyebrow">Anonymous registration</p>
+            <h1>Register account</h1>
+            <p>Start with one account, one timer, and a steadier way to move through the day.</p>
+            <nav class="account-links" aria-label="Account access">
+                <a href="/">Home</a>
+                <a href="/account/login">Already have an account? Log in.</a>
+            </nav>
+        </div>
+        <div class="account-intro__visual" aria-label="Pomodoro visuals">
+            <img src="/assets/welcome-pomodoro-technique.jpg" alt="Pomodoro Time image">
+            <img src="/assets/welcome-tomato.png" alt="tomato">
+        </div>
+    </section>
+
+    <section class="account-panel">
+        <div class="account-panel__inner">
+            <h2>Create account</h2>
+            <p class="account-panel__lead">Pick a user name and password to get to the login page.</p>
+            <form class="account-form" method="post" action="/account/register">
+                <label>User name <input name="userName" autocomplete="username"></label>
+                <label>Password <input name="password" type="password" autocomplete="new-password"></label>
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<section class="account-note" aria-label="Support note">
+    <p>Keep the first session small enough to start right away.</p>
+</section>
 </body>
 </html>

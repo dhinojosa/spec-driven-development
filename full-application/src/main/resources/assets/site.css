@@ -1,16 +1,32 @@
+:root {
+    color-scheme: light;
+    --pomodoro-ink: #172312;
+    --pomodoro-surface: #f3f5ef;
+    --pomodoro-surface-muted: #dbe9c9;
+    --pomodoro-accent: #d8311b;
+    --pomodoro-accent-deep: #b72613;
+    --pomodoro-support: #255f2a;
+    --pomodoro-support-soft: #edf4e1;
+    --pomodoro-border: rgba(23, 35, 18, 0.14);
+    --pomodoro-shadow: 0 20px 50px rgba(23, 35, 18, 0.18);
+}
+
 body {
+    background: var(--pomodoro-surface);
+    color: var(--pomodoro-ink);
     font-family: system-ui, sans-serif;
     margin: 0;
 }
 
-.welcome-page {
-    background: #f3f5ef;
-    color: #172312;
+.welcome-page,
+.account-page {
+    background: var(--pomodoro-surface);
+    color: var(--pomodoro-ink);
 }
 
 .welcome-hero {
     align-items: end;
-    background: #dbe9c9;
+    background: var(--pomodoro-surface-muted);
     display: grid;
     gap: 2rem;
     grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
@@ -54,7 +70,7 @@ body {
 }
 
 .welcome-actions a {
-    background: #d8311b;
+    background: var(--pomodoro-accent);
     border-radius: 6px;
     color: #fff8ef;
     padding: 0.85rem 1.15rem;
@@ -62,7 +78,7 @@ body {
 }
 
 .welcome-actions a:last-child {
-    background: #255f2a;
+    background: var(--pomodoro-support);
 }
 
 .welcome-hero__visuals {
@@ -75,7 +91,7 @@ body {
 
 .welcome-hero__timer {
     border-radius: 8px;
-    box-shadow: 0 20px 50px rgba(23, 35, 18, 0.18);
+    box-shadow: var(--pomodoro-shadow);
     max-width: min(100%, 32rem);
     transform: rotate(-3deg);
     width: 100%;
@@ -90,8 +106,8 @@ body {
 }
 
 .welcome-band {
-    background: #172312;
-    color: #f3f5ef;
+    background: var(--pomodoro-ink);
+    color: var(--pomodoro-surface);
     padding: 0.75rem clamp(1.25rem, 4vw, 4rem);
 }
 
@@ -128,9 +144,177 @@ body {
     padding-left: 1.25rem;
 }
 
+.account-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 28rem);
+    min-height: 72svh;
+}
+
+.account-intro {
+    background: var(--pomodoro-surface-muted);
+    display: grid;
+    gap: 1.5rem;
+    overflow: hidden;
+    padding: 2.25rem clamp(1.25rem, 4vw, 4rem) 1rem;
+    position: relative;
+}
+
+.account-intro__content {
+    max-width: 34rem;
+    z-index: 1;
+}
+
+.account-intro__eyebrow {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+}
+
+.account-intro h1 {
+    font-size: clamp(2rem, 4vw, 4rem);
+    line-height: 0.95;
+    margin: 0;
+    max-width: 11ch;
+}
+
+.account-intro p {
+    font-size: 1rem;
+    line-height: 1.55;
+    margin: 1rem 0 0;
+    max-width: 30rem;
+}
+
+.account-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.account-links a {
+    border-bottom: 2px solid transparent;
+    color: var(--pomodoro-support);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.account-links a:hover,
+.account-links a:focus-visible {
+    border-color: currentColor;
+}
+
+.account-intro__visual {
+    align-items: end;
+    display: grid;
+    justify-items: end;
+    min-height: 15rem;
+    position: relative;
+}
+
+.account-intro__visual img:first-child {
+    border-radius: 8px;
+    box-shadow: var(--pomodoro-shadow);
+    max-width: min(100%, 24rem);
+    width: 100%;
+}
+
+.account-intro__visual img:last-child {
+    bottom: -0.5rem;
+    max-width: min(10rem, 34%);
+    position: absolute;
+    right: 0;
+}
+
+.account-panel {
+    align-content: center;
+    background: var(--pomodoro-surface);
+    display: grid;
+    padding: 2rem clamp(1.25rem, 4vw, 3rem);
+}
+
+.account-panel__inner {
+    border: 1px solid var(--pomodoro-border);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(23, 35, 18, 0.08);
+    padding: 1.5rem;
+}
+
+.account-panel__inner h2 {
+    font-size: 1.65rem;
+    line-height: 1.05;
+    margin: 0;
+}
+
+.account-panel__lead {
+    line-height: 1.5;
+    margin: 0.75rem 0 0;
+}
+
+.account-feedback {
+    background: #fff1dc;
+    border: 1px solid rgba(216, 49, 27, 0.22);
+    border-radius: 8px;
+    color: var(--pomodoro-accent-deep);
+    margin-top: 1rem;
+    padding: 0.85rem 0.95rem;
+}
+
+.account-form {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.account-form label {
+    display: grid;
+    font-weight: 600;
+    gap: 0.45rem;
+}
+
+.account-form input {
+    background: #ffffff;
+    border: 1px solid rgba(23, 35, 18, 0.22);
+    border-radius: 6px;
+    font: inherit;
+    padding: 0.8rem 0.9rem;
+}
+
+.account-form input:focus-visible {
+    border-color: var(--pomodoro-support);
+    outline: 2px solid rgba(37, 95, 42, 0.15);
+    outline-offset: 1px;
+}
+
+.account-form button {
+    background: var(--pomodoro-accent);
+    border: 0;
+    border-radius: 6px;
+    color: #fff8ef;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    padding: 0.9rem 1.15rem;
+}
+
+.account-form button:hover,
+.account-form button:focus-visible {
+    background: var(--pomodoro-accent-deep);
+}
+
+.account-note {
+    background: var(--pomodoro-support-soft);
+    padding: 0.9rem clamp(1.25rem, 4vw, 4rem);
+}
+
+.account-note p {
+    margin: 0;
+}
+
 @media (max-width: 860px) {
     .welcome-hero,
-    .welcome-rhythm {
+    .welcome-rhythm,
+    .account-shell {
         grid-template-columns: 1fr;
     }
 
@@ -146,5 +330,41 @@ body {
     .welcome-hero__tomato {
         bottom: -0.5rem;
         max-width: 7rem;
+    }
+
+    .account-shell {
+        min-height: auto;
+    }
+
+    .account-intro {
+        gap: 1rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .account-intro__visual {
+        justify-items: center;
+        min-height: 11rem;
+    }
+
+    .account-intro__visual img:first-child {
+        max-width: min(100%, 18rem);
+    }
+
+    .account-intro__visual img:last-child {
+        max-width: 5.5rem;
+        right: 0.25rem;
+    }
+
+    .account-panel {
+        padding-top: 1rem;
+    }
+
+    .account-panel__inner {
+        padding: 1.25rem;
+    }
+
+    .account-note {
+        padding-bottom: 1.25rem;
+        padding-top: 0.75rem;
     }
 }

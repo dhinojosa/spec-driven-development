@@ -2,15 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
+    <link rel="stylesheet" href="/assets/site.css">
 </head>
-<body>
-<h1>Login</h1>
-<p class="error">Invalid user name or password</p>
-<form method="post" action="/account/login">
-    <label>User name <input name="userName" autocomplete="username"></label>
-    <label>Password <input name="password" type="password" autocomplete="current-password"></label>
-    <button type="submit">Log in</button>
-</form>
+<body class="account-page">
+<main class="account-shell">
+    <section class="account-intro">
+        <div class="account-intro__content">
+            <p class="account-intro__eyebrow">Anonymous access</p>
+            <h1>Login</h1>
+            <p>Reset the credentials and try again. The next session is still there when you are ready.</p>
+            <nav class="account-links" aria-label="Account access">
+                <a href="/">Home</a>
+                <a href="/account/register">Need an account? Register.</a>
+            </nav>
+        </div>
+        <div class="account-intro__visual" aria-label="Pomodoro visuals">
+            <img src="/assets/welcome-pomodoro-technique.jpg" alt="Pomodoro Time image">
+            <img src="/assets/welcome-tomato.png" alt="tomato">
+        </div>
+    </section>
+
+    <section class="account-panel">
+        <div class="account-panel__inner">
+            <h2>Log in</h2>
+            <p class="account-panel__lead">Enter the same user name and password you registered with.</p>
+            <p class="account-feedback">Invalid user name or password</p>
+            <form class="account-form" method="post" action="/account/login">
+                <label>User name <input name="userName" autocomplete="username"></label>
+                <label>Password <input name="password" type="password" autocomplete="current-password"></label>
+                <button type="submit">Log in</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<section class="account-note" aria-label="Support note">
+    <p>Short retries are fine. Keep the next attempt clear and deliberate.</p>
+</section>
 </body>
 </html>
