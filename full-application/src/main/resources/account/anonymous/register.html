@@ -28,9 +28,10 @@
         <div class="account-panel__inner">
             <h2>Create account</h2>
             <p class="account-panel__lead">Pick a user name and password to get to the login page.</p>
+            {{REGISTRATION_FEEDBACK}}
             <form class="account-form" method="post" action="/account/register">
-                <label>User name <input name="userName" autocomplete="username"></label>
-                <label>Password <input name="password" type="password" autocomplete="new-password"></label>
+                <label>User name <input name="userName" autocomplete="username" value="{{USER_NAME_VALUE}}"></label>
+                <label>Password <input name="password" type="password" autocomplete="new-password" value=""></label>
                 <button type="submit">Register</button>
             </form>
         </div>

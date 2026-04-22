@@ -34,7 +34,7 @@ public final class AccountHttpHandler implements HttpHandler {
         var method = exchange.getRequestMethod();
         var path = exchange.getRequestURI().getPath();
         if ("GET".equals(method) && "/account/register".equals(path)) {
-            HttpResponses.html(exchange, 200, resourceLoader.text("account/anonymous/register.html"));
+            HttpResponses.html(exchange, 200, registrationPage("", ""));
         } else if ("POST".equals(method) && "/account/register".equals(path)) {
             register(exchange);
         } else if ("GET".equals(method) && "/account/login".equals(path)) {
@@ -57,8 +57,12 @@ public final class AccountHttpHandler implements HttpHandler {
             form.getOrDefault("password", "")));
         if (result instanceof AccountResult.AccountRegistered) {
             HttpResponses.html(exchange, 200, resourceLoader.text("account/dashboard.html"));
+        } else if (result instanceof AccountResult.InvalidRegistration(String userName, String message)) {
+            HttpResponses.html(exchange, 422, registrationPage(userName, message));
+        } else if (result instanceof AccountResult.UserNameAlreadyExists(String userName)) {
+            HttpResponses.html(exchange, 409, registrationPage(userName, "User name already exists"));
         } else {
-            HttpResponses.html(exchange, 409, resourceLoader.text("account/anonymous/register.html"));
+            HttpResponses.html(exchange, 409, registrationPage("", ""));
         }
     }
 
@@ -99,5 +103,22 @@ public final class AccountHttpHandler implements HttpHandler {
 
     private static java.util.Map<String, String> form(HttpExchange exchange) throws IOException {
         return FormParser.parse(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+    }
+
+    private String registrationPage(String userName, String message) {
+        var feedback = message.isBlank()
+            ? ""
+            : "<p class=\"account-feedback\">" + escapeHtml(message) + "</p>";
+        return resourceLoader.text("account/anonymous/register.html")
+            .replace("{{REGISTRATION_FEEDBACK}}", feedback)
+            .replace("{{USER_NAME_VALUE}}", escapeHtml(userName));
+    }
+
+    private static String escapeHtml(String value) {
+        return value
+            .replace("&", "&amp;")
+            .replace("\"", "&quot;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;");
     }
 }

@@ -18,6 +18,15 @@ Feature: Account access
         When they log in with user name "casey" and password "correct-horse-battery-staple"
         Then the user is taken to the dashboard page
 
+    @ACC-0001-04
+    Scenario: Anonymous user registers with a password shorter than 8 characters
+        Given an anonymous user is on the account registration page
+        When they register with user name "casey" and password "short"
+        Then the user remains on the account registration page
+        And the registration page shows a password must be at least 8 characters message
+        And the registration page still shows the entered user name
+        And the password field is empty
+
     Scenario: User logs in with bad credentials and sees an invalid credentials message
         Given an account exists for user name "casey" and password "correct-horse-battery-staple"
         And the user is on the login page

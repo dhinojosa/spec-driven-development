@@ -38,6 +38,15 @@ class AnonymousAccountApplicationServiceTest {
         assertThat(queryService.findByUserName(userName)).isInstanceOf(AccountQueryResult.AccountFound.class);
     }
 
+    @org.junit.jupiter.api.Test
+    void shortPasswordRegistrationReturnsInvalidRegistration() {
+        var repository = new InMemoryAccountRepository();
+        var commandService = new AnonymousAccountCommandApplicationService(repository);
+
+        assertThat(commandService.execute(new AccountCommand.RegisterAccount(AccountId.newId(), "casey", "short")))
+            .isEqualTo(new AccountResult.InvalidRegistration("casey", "Password must be at least 8 characters"));
+    }
+
     @net.jqwik.api.Provide
     net.jqwik.api.Arbitrary<String> userNames() {
         return com.evolutionnext.features.account.arbitrary.AccountArbitrary.userNames();

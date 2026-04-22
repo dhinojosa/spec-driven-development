@@ -94,9 +94,31 @@ public final class AccountAccessSteps {
         assertThat(state.lastResponse().body()).contains("Login");
     }
 
+    @Then("the user remains on the account registration page")
+    public void userRemainsOnAccountRegistrationPage() {
+        assertThat(state.lastResponse().statusCode()).isEqualTo(422);
+        assertThat(state.lastResponse().body()).contains("Register account");
+    }
+
     @And("the page shows an invalid credentials message")
     public void pageShowsInvalidCredentialsMessage() {
         assertThat(state.lastResponse().body()).contains("Invalid user name or password");
+    }
+
+    @And("the registration page shows a password must be at least 8 characters message")
+    public void registrationPageShowsPasswordValidationMessage() {
+        assertThat(state.lastResponse().body()).contains("Password must be at least 8 characters");
+    }
+
+    @And("the registration page still shows the entered user name")
+    public void registrationPageStillShowsEnteredUserName() {
+        assertThat(state.lastResponse().body()).contains("name=\"userName\" autocomplete=\"username\" value=\"casey\"");
+    }
+
+    @And("the password field is empty")
+    public void passwordFieldIsEmpty() {
+        assertThat(state.lastResponse().body())
+            .contains("name=\"password\" type=\"password\" autocomplete=\"new-password\" value=\"\"");
     }
 
     private HttpResponse<String> get(String path) throws Exception {

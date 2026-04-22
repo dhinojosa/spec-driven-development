@@ -79,6 +79,16 @@ class AccountHttpHandlerTest {
     }
 
     @Test
+    void shortPasswordRegistrationShowsValidationOnRegistrationPage() throws Exception {
+        var response = post("/account/register", "userName=casey&password=short");
+
+        assertThat(response.statusCode()).isEqualTo(422);
+        assertThat(response.body()).contains("Password must be at least 8 characters");
+        assertThat(response.body()).contains("name=\"userName\" autocomplete=\"username\" value=\"casey\"");
+        assertThat(response.body()).contains("name=\"password\" type=\"password\" autocomplete=\"new-password\" value=\"\"");
+    }
+
+    @Test
     void badCredentialsShowInvalidMessage() throws Exception {
         post("/account/register", "userName=casey&password=correct-horse-battery-staple");
 

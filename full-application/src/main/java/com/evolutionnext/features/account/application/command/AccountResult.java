@@ -3,7 +3,7 @@ package com.evolutionnext.features.account.application.command;
 import com.evolutionnext.features.account.domain.model.AccountId;
 
 public sealed interface AccountResult permits AccountResult.AccountRegistered, AccountResult.LogInSucceeded,
-    AccountResult.LogInFailed, AccountResult.UserNameAlreadyExists {
+    AccountResult.LogInFailed, AccountResult.UserNameAlreadyExists, AccountResult.InvalidRegistration {
     record AccountRegistered(AccountId accountId, String userName) implements AccountResult {
     }
 
@@ -14,5 +14,8 @@ public sealed interface AccountResult permits AccountResult.AccountRegistered, A
     }
 
     record UserNameAlreadyExists(String userName) implements AccountResult {
+    }
+
+    record InvalidRegistration(String userName, String message) implements AccountResult {
     }
 }

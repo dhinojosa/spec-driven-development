@@ -27,11 +27,15 @@ public final class AnonymousAccountCommandApplicationService implements Anonymou
         if (accountRepository.findByUserName(registerAccount.userName()).isPresent()) {
             return new AccountResult.UserNameAlreadyExists(registerAccount.userName());
         }
-        var account = Account.register(registerAccount.accountId(),
-            new UserName(registerAccount.userName()),
-            new PasswordCredential(registerAccount.password()));
-        accountRepository.save(account);
-        return new AccountResult.AccountRegistered(account.accountId(), account.userName().value());
+        try {
+            var account = Account.register(registerAccount.accountId(),
+                new UserName(registerAccount.userName()),
+                new PasswordCredential(registerAccount.password()));
+            accountRepository.save(account);
+            return new AccountResult.AccountRegistered(account.accountId(), account.userName().value());
+        } catch (IllegalArgumentException exception) {
+            return new AccountResult.InvalidRegistration(registerAccount.userName(), exception.getMessage());
+        }
     }
 
     private AccountResult logIn(AccountCommand.LogIn logIn) {
