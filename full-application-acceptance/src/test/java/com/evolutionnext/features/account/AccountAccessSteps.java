@@ -79,10 +79,13 @@ public final class AccountAccessSteps {
         state.rememberLastResponse(post("/account/login", "userName=%s&password=%s".formatted(userName, password)));
     }
 
-    @Then("the user is taken to the pomodoro page")
-    public void userIsTakenToPomodoroPage() {
+    @Then("the user is taken to the dashboard page")
+    public void userIsTakenToDashboardPage() {
         assertThat(state.lastResponse().statusCode()).isEqualTo(200);
-        assertThat(state.lastResponse().body()).contains("Pomodoro");
+        assertThat(state.lastResponse().body()).contains("Dashboard");
+        assertThat(state.lastResponse().body()).contains("/todo-today");
+        assertThat(state.lastResponse().body()).contains("/activity-inventory");
+        assertThat(state.lastResponse().body()).contains("/record-sheet");
     }
 
     @Then("the user remains on the login page")

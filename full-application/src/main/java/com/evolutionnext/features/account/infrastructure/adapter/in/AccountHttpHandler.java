@@ -67,7 +67,7 @@ public final class AccountHttpHandler implements HttpHandler {
         var result = commandPort.execute(new AccountCommand.LogIn(form.getOrDefault("userName", ""),
             form.getOrDefault("password", "")));
         if (result instanceof AccountResult.LogInSucceeded) {
-            HttpResponses.html(exchange, 200, resourceLoader.text("account/pomodoro.html"));
+            HttpResponses.html(exchange, 200, resourceLoader.text("account/dashboard.html"));
         } else {
             HttpResponses.html(exchange, 401, resourceLoader.text("account/anonymous/login-invalid.html"));
         }
