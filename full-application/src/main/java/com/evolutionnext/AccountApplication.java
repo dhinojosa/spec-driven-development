@@ -7,6 +7,7 @@ import com.evolutionnext.features.account.port.out.AccountRepository;
 import com.evolutionnext.features.welcome.infrastructure.adapter.in.WelcomeHttpHandler;
 import com.evolutionnext.http.HealthHandler;
 import com.evolutionnext.http.ResourceLoader;
+import com.evolutionnext.http.SafeHttpHandler;
 import com.evolutionnext.http.StaticAssetHandler;
 import com.sun.net.httpserver.HttpServer;
 
@@ -20,10 +21,11 @@ public final class AccountApplication {
             var commandService = new AnonymousAccountCommandApplicationService(accountRepository);
             var queryService = new AnonymousAccountQueryApplicationService(accountRepository);
             var resourceLoader = new ResourceLoader();
-            server.createContext("/health", new HealthHandler());
-            server.createContext("/assets", new StaticAssetHandler(resourceLoader));
-            server.createContext("/account", new AccountHttpHandler(commandService, queryService, resourceLoader));
-            server.createContext("/", new WelcomeHttpHandler(resourceLoader));
+            server.createContext("/health", new SafeHttpHandler(new HealthHandler()));
+            server.createContext("/assets", new SafeHttpHandler(new StaticAssetHandler(resourceLoader)));
+            server.createContext("/account",
+                new SafeHttpHandler(new AccountHttpHandler(commandService, queryService, resourceLoader)));
+            server.createContext("/", new SafeHttpHandler(new WelcomeHttpHandler(resourceLoader)));
             server.start();
             return server;
         } catch (IOException exception) {

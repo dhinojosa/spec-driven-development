@@ -54,9 +54,12 @@ public final class AccountAccessSteps {
         assertThat(response.body()).contains(userName);
     }
 
-    @And("the user is shown the login page")
-    public void userIsShownLoginPage() {
-        assertThat(state.lastResponse().body()).contains("Login");
+    @And("the user is shown the dashboard page")
+    public void userIsShownDashboardPage() {
+        assertThat(state.lastResponse().body()).contains("Dashboard");
+        assertThat(state.lastResponse().body()).contains("/todo-today");
+        assertThat(state.lastResponse().body()).contains("/activity-inventory");
+        assertThat(state.lastResponse().body()).contains("/record-sheet");
     }
 
     @Given("an account exists for user name {string} and password {string}")

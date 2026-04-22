@@ -4,11 +4,12 @@ Feature: Account access
   Anonymous users need to register accounts and registered users need to log in
   before using the pomodoro page.
 
+  @ACC-0001-02
   Scenario: Anonymous user registers an account with a user name and password
     Given an anonymous user is on the account registration page
     When they register with user name "casey" and password "correct-horse-battery-staple"
     Then an account exists for user name "casey"
-    And the user is shown the login page
+    And the user is shown the dashboard page
 
   Scenario: Registered user logs in and is taken to the pomodoro page
     Given an account exists for user name "casey" and password "correct-horse-battery-staple"

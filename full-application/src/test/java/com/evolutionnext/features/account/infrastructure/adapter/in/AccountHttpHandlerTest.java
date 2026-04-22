@@ -58,6 +58,10 @@ class AccountHttpHandlerTest {
         var response = post("/account/register", "userName=casey&password=correct-horse-battery-staple");
 
         assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body()).contains("Dashboard");
+        assertThat(response.body()).contains("/todo-today");
+        assertThat(response.body()).contains("/activity-inventory");
+        assertThat(response.body()).contains("/record-sheet");
         assertThat(get("/account?userName=" + encode("casey")).body()).contains("casey");
     }
 

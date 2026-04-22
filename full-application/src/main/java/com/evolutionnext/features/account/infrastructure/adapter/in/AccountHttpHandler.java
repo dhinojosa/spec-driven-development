@@ -56,7 +56,7 @@ public final class AccountHttpHandler implements HttpHandler {
             form.getOrDefault("userName", ""),
             form.getOrDefault("password", "")));
         if (result instanceof AccountResult.AccountRegistered) {
-            HttpResponses.html(exchange, 200, resourceLoader.text("account/anonymous/login.html"));
+            HttpResponses.html(exchange, 200, resourceLoader.text("account/dashboard.html"));
         } else {
             HttpResponses.html(exchange, 409, resourceLoader.text("account/anonymous/register.html"));
         }

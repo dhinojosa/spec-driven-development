@@ -37,8 +37,11 @@ public final class AccountArbitrary {
 
     public static Arbitrary<Account> accountsWithUserNamePrefix(String prefix) {
         return Combinators.combine(userNames(), passwords())
-            .as((userName, password) -> Account.register(AccountId.newId(),
-                new UserName(prefix + userName),
-                new PasswordCredential(password)));
+            .as((userName, password) -> {
+                var accountId = AccountId.newId();
+                return Account.register(accountId,
+                    new UserName(prefix + userName + "-" + accountId.value()),
+                    new PasswordCredential(password));
+            });
     }
 }
