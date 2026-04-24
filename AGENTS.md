@@ -23,6 +23,8 @@ Before making feature changes, read:
 - Show the task plan before implementing feature behavior.
 - Implement features as vertical slices through the relevant modules.
 - Mark completed task checkboxes when work is done.
+- Do not treat a feature as complete unless the slice is test-complete.
+- When the feature's behavior is visible in the browser, include browser-level UI verification before calling the slice complete unless the user explicitly accepts the gap.
 
 ## Build
 

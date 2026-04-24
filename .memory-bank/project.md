@@ -16,6 +16,10 @@ feature delivery.
 - Maintain shared domain terms in `.memory-bank/ubiquitous-language.md`.
 - Keep tests, classes, specs, routes, handlers, and user-facing copy aligned to
   the ubiquitous language.
+- Treat a delivery as complete only when it is test-complete for the implemented
+  slice.
+- When a feature includes browser-visible behavior that matters to the user,
+  include browser-level UI verification in addition to lower-level tests.
 
 ## Web Application Constraints
 

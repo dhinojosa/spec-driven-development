@@ -112,3 +112,8 @@ business-facing spec to implementation and verification.
 
 Do not implement feature behavior without a Cucumber spec and task plan unless
 the user explicitly asks for that.
+
+A vertical slice is not complete unless the verification is complete for that
+slice. When the business behavior is visible in the browser, completion
+requires browser-level UI verification in addition to domain, application,
+controller, and acceptance coverage.

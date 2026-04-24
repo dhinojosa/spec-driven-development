@@ -101,6 +101,9 @@ updating the `full-application-e2e` `.env` resource, Maven resource filtering,
 Docker Compose file, optional `init.sql`, and Testcontainers/REST Assured,
 jqwik, or Selenium tests as appropriate.
 
+When a feature's behavior is visible in the browser, the E2E Testing section
+must include browser-level UI verification, normally with Selenium.
+
 If a category does not apply to a feature, keep the category visible and explain
 why it is unnecessary for that feature.
 
@@ -162,3 +165,8 @@ validation, and document the validation gap in the task file.
 
 Do not mark implementation tasks complete unless implementation and validation
 are complete, or the remaining validation gap is explicitly recorded.
+
+Do not describe a governed feature as executed or delivered if an applicable
+test layer is still missing. If the feature includes browser-visible behavior,
+the E2E Testing section remains open until browser-level verification is
+implemented or the gap is explicitly accepted by the user.
