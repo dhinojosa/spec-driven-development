@@ -6,6 +6,7 @@ import com.evolutionnext.features.account.application.query.AccountQueryResult;
 import com.evolutionnext.features.account.domain.model.AccountId;
 import com.evolutionnext.features.account.port.in.AnonymousAccountCommandPort;
 import com.evolutionnext.features.account.port.in.AnonymousAccountQueryPort;
+import com.evolutionnext.http.AuthCookies;
 import com.evolutionnext.http.FormParser;
 import com.evolutionnext.http.HttpResponses;
 import com.evolutionnext.http.ResourceLoader;
@@ -14,7 +15,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.UUID;
 
 public final class AccountHttpHandler implements HttpHandler {
@@ -67,7 +67,7 @@ public final class AccountHttpHandler implements HttpHandler {
             form.getOrDefault("userName", ""),
             form.getOrDefault("password", "")));
         if (result instanceof AccountResult.AccountRegistered(AccountId ignored, String userName)) {
-            rememberAuthenticatedUser(exchange, userName);
+            AuthCookies.rememberAuthenticatedUser(exchange, userName);
             HttpResponses.html(exchange, 200, resourceLoader.text("account/dashboard.html"));
         } else if (result instanceof AccountResult.InvalidRegistration(String userName, String message)) {
             HttpResponses.html(exchange, 422, registrationPage(userName, message));
@@ -83,7 +83,7 @@ public final class AccountHttpHandler implements HttpHandler {
         var result = commandPort.execute(new AccountCommand.LogIn(form.getOrDefault("userName", ""),
             form.getOrDefault("password", "")));
         if (result instanceof AccountResult.LogInSucceeded(AccountId ignored, String userName)) {
-            rememberAuthenticatedUser(exchange, userName);
+            AuthCookies.rememberAuthenticatedUser(exchange, userName);
             HttpResponses.html(exchange, 200, resourceLoader.text("account/dashboard.html"));
         } else {
             HttpResponses.html(exchange, 401, resourceLoader.text("account/anonymous/login-invalid.html"));
@@ -91,12 +91,12 @@ public final class AccountHttpHandler implements HttpHandler {
     }
 
     private void logOut(HttpExchange exchange) throws IOException {
-        clearAuthenticatedUser(exchange);
+        AuthCookies.clearAuthenticatedUser(exchange);
         HttpResponses.html(exchange, 200, resourceLoader.text("welcome/anonymous/index.html"));
     }
 
     private void securePage(HttpExchange exchange, String resourceName) throws IOException {
-        if (!isAuthenticated(exchange)) {
+        if (!AuthCookies.isAuthenticated(exchange)) {
             HttpResponses.html(exchange, 401, resourceLoader.text("welcome/anonymous/index.html"));
             return;
         }
@@ -148,20 +148,4 @@ public final class AccountHttpHandler implements HttpHandler {
             .replace(">", "&gt;");
     }
 
-    private static void rememberAuthenticatedUser(HttpExchange exchange, String userName) {
-        exchange.getResponseHeaders().add("Set-Cookie",
-            "account_user=" + userName + "; Path=/; HttpOnly; SameSite=Lax");
-    }
-
-    private static void clearAuthenticatedUser(HttpExchange exchange) {
-        exchange.getResponseHeaders().add("Set-Cookie",
-            "account_user=; Path=/; Max-Age=0; HttpOnly; SameSite=Lax");
-    }
-
-    private static boolean isAuthenticated(HttpExchange exchange) {
-        return exchange.getRequestHeaders().getOrDefault("Cookie", java.util.List.of()).stream()
-            .flatMap(header -> Arrays.stream(header.split(";")))
-            .map(String::trim)
-            .anyMatch(cookie -> cookie.startsWith("account_user=") && !cookie.equals("account_user="));
-    }
 }

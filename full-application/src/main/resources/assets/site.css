@@ -271,6 +271,12 @@ body {
     margin: 0.75rem 0 0;
 }
 
+.account-panel__hint {
+    color: rgba(23, 35, 18, 0.74);
+    line-height: 1.45;
+    margin: 1rem 0 0;
+}
+
 .account-feedback {
     background: #fff1dc;
     border: 1px solid rgba(216, 49, 27, 0.22);
@@ -320,6 +326,105 @@ body {
 .account-form button:hover,
 .account-form button:focus-visible {
     background: var(--pomodoro-accent-deep);
+}
+
+.todo-list {
+    display: grid;
+    gap: 1rem;
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+}
+
+.todo-task {
+    background: #fffdf8;
+    border: 1px solid var(--pomodoro-border);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.todo-task__summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: space-between;
+}
+
+.todo-task__name {
+    font-weight: 700;
+}
+
+.todo-task__estimate {
+    color: rgba(23, 35, 18, 0.78);
+    font-weight: 600;
+}
+
+.todo-task__estimate,
+.todo-task__status,
+.todo-task__warning,
+.todo-empty {
+    margin: 0.65rem 0 0;
+}
+
+.todo-empty {
+    background: var(--pomodoro-support-soft);
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+}
+
+.todo-task__warning {
+    color: var(--pomodoro-accent-deep);
+    font-weight: 700;
+}
+
+.todo-task__status {
+    color: var(--pomodoro-support);
+    font-weight: 700;
+}
+
+.todo-task__controls {
+    display: grid;
+    gap: 0.85rem;
+    margin-top: 0.9rem;
+}
+
+.todo-task__controls .account-form {
+    margin-top: 0;
+}
+
+.todo-task__controls label {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.todo-task__complete-form button {
+    background: var(--pomodoro-support);
+    border: 0;
+    border-radius: 6px;
+    color: #fff8ef;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+    padding: 0.9rem 1.15rem;
+}
+
+.todo-task__complete-form button:hover,
+.todo-task__complete-form button:focus-visible {
+    background: #1d4a21;
+}
+
+.todo-task--complete {
+    color: #6b7280;
+    text-decoration: line-through;
+}
+
+.todo-task--complete .todo-task__warning,
+.todo-task--complete .todo-task__status {
+    color: inherit;
+}
+
+.todo-task form {
+    margin-top: 0;
 }
 
 .account-note {

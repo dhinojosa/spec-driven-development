@@ -32,6 +32,15 @@
         <div class="account-panel__inner">
             <h2>Todo today page</h2>
             <p class="account-panel__lead">Start with the one task that deserves the next session.</p>
+            <form class="account-form" method="post" action="/todo-today/task">
+                <label>Task name <input name="taskName" autocomplete="off"></label>
+                <button type="submit">Add task</button>
+            </form>
+            {{TODO_EMPTY_STATE}}
+            <ul class="todo-list">
+                {{TODO_TASKS}}
+            </ul>
+            <p class="account-panel__hint">Add the task first, then set the estimate and completed pomodoros on the task card.</p>
         </div>
     </section>
 </main>

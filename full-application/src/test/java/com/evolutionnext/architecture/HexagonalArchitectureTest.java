@@ -1,8 +1,5 @@
 package com.evolutionnext.architecture;
 
-import com.evolutionnext.features.account.port.in.AnonymousAccountCommandPort;
-import com.evolutionnext.features.account.port.in.AnonymousAccountQueryPort;
-import com.evolutionnext.features.account.port.out.AccountRepository;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -168,8 +165,10 @@ class HexagonalArchitectureTest {
             if (inFeatureLayer(name, APPLICATION) && !inFeatureLayer(name, APPLICATION_SERVICE)) {
                 violations.add(name + " must live under application.service");
             }
-            var implementsCommand = AnonymousAccountCommandPort.class.isAssignableFrom(type);
-            var implementsQuery = AnonymousAccountQueryPort.class.isAssignableFrom(type);
+            var implementsCommand = Stream.of(type.getInterfaces())
+                .anyMatch(port -> port.getSimpleName().endsWith("CommandPort"));
+            var implementsQuery = Stream.of(type.getInterfaces())
+                .anyMatch(port -> port.getSimpleName().endsWith("QueryPort"));
             if (name.endsWith("CommandApplicationService") && !implementsCommand) {
                 violations.add(name + " must implement a command port");
             }
@@ -195,12 +194,20 @@ class HexagonalArchitectureTest {
         for (var type : applicationClasses()) {
             var name = type.getName();
             if (name.endsWith("Repository") && inFeatureLayer(name, ADAPTER_OUT)) {
-                if (!AccountRepository.class.isAssignableFrom(type)) {
+                var implementsRepositoryPort = Stream.of(type.getInterfaces())
+                    .anyMatch(port -> port.getSimpleName().endsWith("Repository") && inFeatureLayer(port.getName(), PORT_OUT));
+                if (!implementsRepositoryPort) {
                     violations.add(name + " must implement a port.out repository");
                 }
                 var testPath = Path.of("src/test/java", name.replace('.', '/') + "PropertyTest.java");
                 if (!Files.exists(testPath)) {
                     testPath = Path.of("full-application/src/test/java", name.replace('.', '/') + "PropertyTest.java");
+                }
+                if (!Files.exists(testPath)) {
+                    testPath = Path.of("src/test/java", name.replace('.', '/') + "Test.java");
+                }
+                if (!Files.exists(testPath)) {
+                    testPath = Path.of("full-application/src/test/java", name.replace('.', '/') + "Test.java");
                 }
                 if (!Files.exists(testPath)) {
                     violations.add(name + " must have a corresponding property or integration test");
