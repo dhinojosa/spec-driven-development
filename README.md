@@ -50,6 +50,23 @@ Testcontainers, Cucumber, Log4j, SLF4J, jqwik, AssertJ, Jackson, and REST Assure
 The parent POM also pins Maven plugin versions for resources, compiler, Surefire,
 Failsafe, Surefire reports, and project info reports.
 
+## Mutation Testing
+
+PIT mutation testing is available for the production code and tests in
+`full-application`. It is intentionally separate from the normal build.
+
+Run it from the repository root:
+
+```bash
+mvn -pl full-application -Pmutation-testing test-compile
+```
+
+The HTML report is written to:
+
+```text
+full-application/target/pit-reports/index.html
+```
+
 ## E2E Verification
 
 Browser-level E2E tests live in the `full-application-e2e` module. Select that
