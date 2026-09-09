@@ -29,7 +29,7 @@
         <postgresql.version>42.7.7</postgresql.version>
         <maven.compiler.release>26</maven.compiler.release>
         <jib.skip>true</jib.skip>
-        <maven-compiler-plugin.version>4.0.0-beta-4</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
         <maven-failsafe-plugin.version>3.5.5</maven-failsafe-plugin.version>
         <maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
         <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
@@ -41,6 +41,8 @@
         <module>full-application</module>
         <module>full-application-acceptance</module>
         <module>full-application-e2e</module>
+        <module>jqwik</module>
+        <module>testcontainers</module>
     </modules>
 
     <dependencyManagement>
@@ -84,8 +86,6 @@
                 <groupId>net.jqwik</groupId>
                 <artifactId>jqwik</artifactId>
                 <version>${jqwik.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
